@@ -1,9 +1,12 @@
+# For testing purposes
+
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 import logging
 from logging import Formatter, FileHandler
 import os
 import models
+import templates
 
 project_dir = os.path.dirname(os.path.abspath(__file__))
 database_file = "sqlite:///{}".format(os.path.join(project_dir, "resources.db"))
@@ -12,6 +15,8 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = database_file
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config.from_object('config')
+app.register_error_handler(500, internal_error)
+app.register_error_handler(404, not_found_error)
 db = SQLAlchemy(app)
 
 @app.route('/')
@@ -21,15 +26,17 @@ def home_page():
     print(models.User.query.all())
     return "Home Page"
 
-"""
 @app.errorhandler(500)
-def internal_error(error):
-    return render_template('500.html'), 500
+def internal_error(e):
+    print("500")
+    #return e, 500
+    return render_template('templates/500.html'), 500
 
 @app.errorhandler(404)
-def not_found_error(error):
-    return render_template('404.html'), 404
-"""
+def not_found_error(e):
+    print("404")
+    #return "Bad request", 404
+    return render_template('templates/404.html'), 404
 
 if not app.debug:
     file_handler = FileHandler('error.log')

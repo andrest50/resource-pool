@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<header>
+    <title>Users</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../static/css/styling.css?u={{ last_updated }}">
+</header>
+<script type="text/javascript">
+    const get_user = () => {
+        console.log("here")
+        users = []
+        searched_user = users.filter((user) => user.username === document.getElementById('search_user').value)
+        return searched_user[0]
+    }
+</script>
+<body>
+    <h1>Users List</h1>
+    <button type="button" class="btn btn-dark">Search user</button>
+    <input type="text" placeholder="Search.." id="search_user" onclick='get_user();'>
+    <table>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>{{user.username}}</td>
+            <td>{{user.email}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
