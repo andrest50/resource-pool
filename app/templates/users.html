@@ -1,33 +1,68 @@
 <!DOCTYPE html>
 <header>
     <title>Users</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../static/css/styling.css?u={{ last_updated }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </header>
 <script type="text/javascript">
-    window.onload = function(){
-        document.getElementById('search-btn').onclick = function a_user(){
+    $(document).ready(function(){
+        $('#search-btn').click(function(){
             get_user()
-        }
-    }
+        })
+        /*document.getElementById('create-user-btn').onclick = function create_user(){
+            create_user_modal()
+        }*/
+    })
     const get_user = () => {
-        const users = []
-        fetch('/users_data')
+        fetch('/users')
             .then(response => response.json())
-            .then(data => users = data)
-        console.log(users)
-        searched_user = users.filter((user) => user.username === document.getElementById('search-user').value)
-        const user_tag = document.createElement("p")
-        user_tag.textContent = searched_user[0]
-        document.getElementById('search-user').nextSibling = user_tag
-        document.body.appendChild(user_tag)
-        console.log("here2")
+            .then(data => {
+                let users = data
+                console.log(users)
+                searched_user = users.filter((user) => user.username === document.getElementById('search-user').value)
+                const user_tag = document.getElementById("found-user")
+                user_tag.textContent = "Searched: " + searched_user[0].username
+            })
+            .catch(error => console.log(error))
     }
 </script>
 <body>
     <h1>Users List</h1>
+    <!-- Button to Open the Modal -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+        Open modal
+    </button>
+  
+    <!-- The Modal -->
+    <div class="modal" id="myModal">
+        <div class="modal-dialog">
+        <div class="modal-content">
+    
+            <!-- Modal Header -->
+            <div class="modal-header">
+            <h4 class="modal-title">Modal Heading</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+    
+            <!-- Modal body -->
+            <div class="modal-body">
+            Modal body..
+            </div>
+    
+            <!-- Modal footer -->
+            <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+    
+        </div>
+        </div>
+    </div>
     <button type="button" class="btn btn-dark" id="search-btn">Search user</button>
     <input type="text" placeholder="Search.." id="search-user">
+    <p id="found-user">Searched: [None]</p>
     <table>
         <tr>
             <th>Username</th>

@@ -11,7 +11,6 @@ class User(Base):
     email = Column(String(120), unique=True, nullable=False)
 
     def __repr__(self):
-        #return f'<User {self.username}>'
         user_dict = {
             'id': self.id,
             'username': self.username,

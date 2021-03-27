@@ -1,5 +1,5 @@
 import functools
-from flask import Blueprint, render_template, jsonify, request
+from flask import Blueprint, render_template, jsonify, request, url_for
 from app import models
 import json
 
@@ -11,7 +11,7 @@ def home_page():
     #models.test_db()
     return render_template('home.html')
 
-@bp.route('/users')
+@bp.route('/users_page')
 def users_page():
     #models.test_db()
     users = models.User.query.all()
@@ -21,12 +21,14 @@ def users_page():
         print(user.email)
     return render_template('users.html', users=users)
 
-@bp.route('/users_data', methods=['GET'])
-def get_users_data():
+@bp.route('/users', methods=['GET', 'POST'])
+def users_data():
     users = models.User.query.all()
-    print("here")
+    if request.method == 'POST':
+        users.append(request.users)
+        return redirect(url_for('users_page'))
     print(users)
-    return json.dumps(users[0])
+    return f'{users}'
 
 @bp.errorhandler(500)
 def internal_error(e):
