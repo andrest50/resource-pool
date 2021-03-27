@@ -5,17 +5,29 @@
     <link rel="stylesheet" type="text/css" href="../static/css/styling.css?u={{ last_updated }}">
 </header>
 <script type="text/javascript">
+    window.onload = function(){
+        document.getElementById('search-btn').onclick = function a_user(){
+            get_user()
+        }
+    }
     const get_user = () => {
-        console.log("here")
-        users = []
-        searched_user = users.filter((user) => user.username === document.getElementById('search_user').value)
-        return searched_user[0]
+        const users = []
+        fetch('/users_data')
+            .then(response => response.json())
+            .then(data => users = data)
+        console.log(users)
+        searched_user = users.filter((user) => user.username === document.getElementById('search-user').value)
+        const user_tag = document.createElement("p")
+        user_tag.textContent = searched_user[0]
+        document.getElementById('search-user').nextSibling = user_tag
+        document.body.appendChild(user_tag)
+        console.log("here2")
     }
 </script>
 <body>
     <h1>Users List</h1>
-    <button type="button" class="btn btn-dark">Search user</button>
-    <input type="text" placeholder="Search.." id="search_user" onclick='get_user();'>
+    <button type="button" class="btn btn-dark" id="search-btn">Search user</button>
+    <input type="text" placeholder="Search.." id="search-user">
     <table>
         <tr>
             <th>Username</th>

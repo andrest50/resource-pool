@@ -1,5 +1,5 @@
 import functools
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, jsonify, request
 from app import models
 import json
 
@@ -20,6 +20,13 @@ def users_page():
         print(user.username)
         print(user.email)
     return render_template('users.html', users=users)
+
+@bp.route('/users_data', methods=['GET'])
+def get_users_data():
+    users = models.User.query.all()
+    print("here")
+    print(users)
+    return json.dumps(users[0])
 
 @bp.errorhandler(500)
 def internal_error(e):
