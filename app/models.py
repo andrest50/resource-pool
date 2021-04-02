@@ -2,9 +2,11 @@ from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from app.database import Base
+#from app import db, ma
 import json
 
-class User(Base):
+"""
+class User(db.Model):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True)
     username = Column(String(80), unique=True, nullable=False)
@@ -17,6 +19,16 @@ class User(Base):
             'email': self.email
         }
         return json.dumps(user_dict)
+
+class UserSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        fields = ('id', 'username', 'email')
+        model = User
+        sqla_session = db.session
+
+user_schema = UserSchema()
+users_schema = UserSchema(many=True)
+"""
 
 def test_db():
     Base.metadata.create_all()
