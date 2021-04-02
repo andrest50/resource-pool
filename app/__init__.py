@@ -1,7 +1,7 @@
 # app/__init__.py
 
 # third-party imports
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_restful import Api, Resource
@@ -55,6 +55,11 @@ class UserListResource(Resource):
         db.session.add(new_user)
         db.session.commit()
         return user_schema.dump(new_user)
+
+    def delete(self):
+        User.query.delete()
+        db.session.commit()
+        return '', 204
 
 class UserResource(Resource):
     def get(self, user_id):

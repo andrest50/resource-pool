@@ -17,15 +17,15 @@
         $('#search-btn').click(function(){
             get_user()
         })
-        $('#search-user').keypress(function (event){
-            console.log(event.which)
-            if(event.which == 13){
+        $('#search-user').keypress(function (e){
+            console.log(e.which)
+            if(e.which == 13){
                 $('#search-btn').click()
                 return false
             }
         })
-        $('#create-user-form').submit(function(event){
-            event.preventDefault()
+        $('#create-user-form').submit(function(e){
+            e.preventDefault()
 
             form_values = $(this).serializeArray()
             if(!form_values[0].value || !form_values[1].value)
@@ -41,22 +41,29 @@
                 .val('')
             $("#myModal").modal('toggle')
 
-            new_entry_id_val = parseInt($("#user-table tr:last button").attr('id')) + 1
-            console.log(new_entry_id_val)
+            if(parseInt($("#user-table tr:last button").attr('id')))
+                new_entry_id_val = parseInt($("#user-table tr:last button").attr('id')) + 1
+            else
+                new_entry_id_val = 1
+
             new_entry_id = $("<td></td>").text(new_entry_id_val)
             new_entry_username = $("<td></td>").text(user_obj['username'])
             new_entry_email = $("<td></td>").text(user_obj['email'])
             new_entry_delete_btn = $('<td></td>').append($('<button></button>')
                 .text("Delete")
-                .addClass('btn btn-danger')
+                .addClass('btn btn-danger delete-user-btn')
                 .attr('id', new_entry_id_val)
                 .css({'height': '30px', 'width': '70px'}))
-            //new_row.appendTo(new_entry_username, new_entry_email)
             $("#user-table").find('tbody').append($('<tr>').append(new_entry_id, new_entry_username, new_entry_email, new_entry_delete_btn))
         })
-        /*document.getElementById('create-user-btn').onclick = function create_user(){
-            create_user_modal()
-        }*/
+        $(".delete-user-btn").click(function(e){
+            delete_user(e.target.id)
+            e.target.parentElement.parentElement.remove()
+        })
+        $('#delete-all-btn').click(function(e){
+            delete_all_users()
+            $('#user-table tbody').children().filter(':not(#user-table tr:first)').remove()
+        })
     })
 
     const get_user = () => {
@@ -65,7 +72,8 @@
         .then(data => {
             let users = data
             console.log(users)
-            searched_user = users.filter((user) => user.username === document.getElementById('search-user').value)
+            searched_user = users.filter((user) => user.username === document.getElementById('search-user').value ||
+                user.id == document.getElementById('search-user').value)
             if(searched_user === undefined || searched_user.length == 0)
                 return
             $("#found-user").text("Searched: " + searched_user[0].username)
@@ -89,10 +97,26 @@
         .then(data => {
             let user = data
             console.log(user)
-            //searched_user = users.filter((user) => user.username === document.getElementById('search-user').value)
-            //const user_tag = document.getElementById("found-user")
-            //user_tag.textContent = "Searched: " + searched_user[0].username
         })
+        .catch(error => console.log(error))
+    }
+
+    const delete_user = (user_id) => {
+        console.log(user_id)
+        fetch('/user/' + user_id, {
+            method: 'DELETE'
+        })
+        .then(response => response.text())
+        .then(response => console.log(response))
+        .catch(error => console.log(error))
+    }
+
+    const delete_all_users = () => {
+        fetch('/users', {
+            method: 'DELETE'
+        })
+        .then(response => response.text())
+        .then(response => console.log(response))
         .catch(error => console.log(error))
     }
 </script>
@@ -100,8 +124,9 @@
     <h1>Users List</h1>
     <!-- Button to Open the Modal -->
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-        Open modal
+        Create User
     </button>
+    <button type="button" id="delete-all-btn" class="btn btn-danger">Delete All Users</button>
   
     <!-- The Modal -->
     <div class="modal" id="myModal">
@@ -130,8 +155,8 @@
         </div>
         </div>
     </div>
-    <button type="button" class="btn btn-dark" id="search-btn">Search user</button>
-    <input type="text" placeholder="Search.." id="search-user">
+    <br/><br /><button type="button" class="btn btn-dark" id="search-btn">Search user</button>
+    <input type="text" placeholder="Search by ID or name..." id="search-user">
     <p id="found-user" style="margin-bottom: 0px">Searched: [None]</p>
     <span id="found-user-username"></span>
     <span id="found-user-email"></span>
@@ -147,7 +172,7 @@
             <td>{{user.id}}</td>
             <td>{{user.username}}</td>
             <td>{{user.email}}</td>
-            <td><button type="button" id={{user.id}} class="btn btn-danger" data-dismiss="modal" style="height: 30px; width: 70px;">Delete</button></td>
+            <td><button type="button" id={{user.id}} class="btn btn-danger delete-user-btn" data-dismiss="modal" style="height: 30px; width: 70px;">Delete</button></td>
         </tr>
         {% endfor %}
     </table>
