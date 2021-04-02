@@ -2,10 +2,9 @@ from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from app.database import Base
-#from app import db, ma
+from app import db, ma
 import json
 
-"""
 class User(db.Model):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True)
@@ -28,10 +27,9 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
 
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
-"""
 
 def test_db():
-    Base.metadata.create_all()
+    #Base.metadata.create_all()
     admin = User(username='admin', email='admin@example.com')
     guest = User(username='guest', email='guest@example.com')
     session.add(admin)

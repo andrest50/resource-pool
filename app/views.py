@@ -1,6 +1,8 @@
 import functools
 from flask import Blueprint, render_template, jsonify, request, url_for
-from app import models
+from flask_restful import Api, Resource
+from . import models
+from app import db
 from . import database
 import json
 
@@ -15,7 +17,7 @@ def home_page():
 @bp.route('/users_page')
 def users_page():
     #models.test_db()
-    users = User.query.all()
+    users = models.User.query.all()
     print(users)
     for user in users:
         print(user.username)
@@ -51,6 +53,47 @@ def user_data():
     print(users)
     return f'{users}'
 """
+
+class UserListResource(Resource):
+    def get(self):
+        users = models.User.query.all()
+        return models.users_schema.dump(users)
+
+    def post(self):
+        new_user = models.User(
+            username=request.json['username'],
+            email=request.json['email']
+        )
+        db.session.add(new_user)
+        db.session.commit()
+        return models.user_schema.dump(new_user)
+
+    def delete(self):
+        models.User.query.delete()
+        db.session.commit()
+        return '', 204
+
+class UserResource(Resource):
+    def get(self, user_id):
+        user = models.User.query.get_or_404(user_id)
+        return models.user_schema.dump(user)
+
+    def patch(self, user_id):
+        user = models.User.get_or_404(user_id)
+
+        if 'username' in request.json:
+            user.username = request.json['user']
+        if 'email' in request.json:
+            user.email = request.json['email']
+        
+        db.session.commit()
+        return models.user_schema.dump(user)
+    
+    def delete(self, user_id):
+        user = models.User.query.get_or_404(user_id)
+        db.session.delete(user)
+        db.session.commit()
+        return '', 204
 
 @bp.errorhandler(500)
 def internal_error(e):
