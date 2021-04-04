@@ -6,6 +6,31 @@ from app.database import Base
 from app import db, ma
 import json
 
+class Resource(db.Model):
+    __tablename__ = 'resources'
+
+    id = Column(Integer, primary_key=True)
+    url = Column(String(80), unique=False, nullable=False)
+    user_id = Column(Integer, db.ForeignKey('users.id'), nullable=False)
+
+    def __repr__(self):
+        resource_dict = {
+            'id': self.id,
+            'url': self.url,
+            'user_id': self.user_id
+        }
+        return json.dumps(resource_dict)
+
+class ResourceSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        fields = ('id', 'url', 'user_id')
+        model = Resource
+        include_fk = True
+        sqla_session = db.session
+
+resource_schema = ResourceSchema()
+resources_schema = ResourceSchema(many=True)
+
 class User(db.Model):
     __tablename__ = 'users'
 
@@ -31,37 +56,11 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
     id = ma.auto_field()
     username = ma.auto_field()
     email = ma.auto_field()
-    resources = ma.auto_field()
+    #resources = ma.auto_field()
+    resources = ma.Nested(ResourceSchema, many=True)
 
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
-
-class Resource(db.Model):
-    __tablename__ = 'resources'
-    
-    id = Column(Integer, primary_key=True)
-    url = Column(String(80), unique=False, nullable=False)
-    user_id = Column(Integer, db.ForeignKey('user.id'), nullable=False)
-    #user = db.relationship('User', backref='resources')
-    #user = fields.Nested(UserSchema)
-
-    def __repr__(self):
-        user_dict = {
-            'id': self.id,
-            'url': self.url,
-            'user_id': self.user_id
-        }
-        return json.dumps(user_dict)
-
-class ResourceSchema(ma.SQLAlchemyAutoSchema):
-    class Meta:
-        fields = ('id', 'url', 'user_id')
-        model = Resource
-        include_fk = True
-        sqla_session = db.session
-
-resource_schema = ResourceSchema()
-resources_schema = ResourceSchema(many=True)
 
 def test_db():
     #Base.metadata.create_all()
