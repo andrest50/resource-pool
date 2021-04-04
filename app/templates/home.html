@@ -1,19 +1,26 @@
 <!DOCTYPE html>
-<header>
+<head>
     <title>Dashboard</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../static/css/styling.css?u={{ last_updated }}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</header>
+</head>
 <style>
     th, td {
         padding: 0 15px;
     }
+    #footer {
+        position: absolute;
+        bottom: 0px;
+        width: 100%;
+    }
 </style>
 <script type="text/javascript">
     $(document).ready(function(){
+        $('#header').load('layouts/header.html?active_page=home')
+        $('#footer').load('layouts/footer.html?active_page=home')
         $('#create-resource-form').submit(function(e){
             e.preventDefault()
 
@@ -66,6 +73,7 @@
 
 </script>
 <body>
+    <div id="header"></div>
     <h1>Dashboard</h1>
     <p>This is a website for finding learning resources.</p>
     <a href="/users_page">Users</a><br /><br />
@@ -131,5 +139,6 @@
             {% endfor %}
         </table>
     </div>
+    <div id="footer"></div>
 </body>
 </html>

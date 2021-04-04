@@ -11,9 +11,16 @@
     th, td {
         padding: 0 15px;
     }
+    #footer {
+        position: absolute;
+        bottom: 0px;
+        width: 100%;
+    }
 </style>
 <script type="text/javascript">
     $(document).ready(function(){
+        $('#header').load('layouts/header.html?active_page=users')
+        $('#footer').load('layouts/footer.html?active_page=home')
         $('#search-btn').click(function(){
             get_user()
         })
@@ -117,61 +124,65 @@
     }
 </script>
 <body>
-    <h1>Users List</h1>
-    <a href="/">Dashboard</a><br /><br />
-    <!-- Button to Open the Modal -->
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-        Create User
-    </button>
-    <button type="button" id="delete-all-btn" class="btn btn-danger">Delete All Users</button>
-  
-    <!-- The Modal -->
-    <div class="modal" id="myModal">
-        <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Register</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <form id="create-user-form">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" name="username" value="" class="form-control" id="username" aria-describedby="usernameHelp" placeholder="Username">
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email address</label>
-                        <input type="email" name="email" value="" class="form-control" id="email" placeholder="Email">
+    <div id="header"></div>
+    <div>
+        <h1>Users List</h1>
+        <a href="/">Dashboard</a><br /><br />
+        <!-- Button to Open the Modal -->
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+            Create User
+        </button>
+        <button type="button" id="delete-all-btn" class="btn btn-danger">Delete All Users</button>
+    
+        <!-- The Modal -->
+        <div class="modal" id="myModal">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Register</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <form id="create-user-form">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" name="username" value="" class="form-control" id="username" aria-describedby="usernameHelp" placeholder="Username">
                         </div>
-                </div>
-                <div class="modal-footer">
-                    <input type="submit" value="Submit" class="btn btn-success" id="submit-user-btn">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                </div>
-            </form>
+                        <div class="form-group">
+                            <label for="email">Email address</label>
+                            <input type="email" name="email" value="" class="form-control" id="email" placeholder="Email">
+                            </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" value="Submit" class="btn btn-success" id="submit-user-btn">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+            </div>
         </div>
-        </div>
+        <br/><br /><button type="button" class="btn btn-dark" id="search-btn">Search user</button>
+        <input type="text" placeholder="Search by ID or name..." id="search-user">
+        <p id="found-user" style="margin-bottom: 0px">Searched: [None]</p>
+        <span id="found-user-username"></span>
+        <span id="found-user-email"></span>
+        <br />
+        <table id="user-table">
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+            </tr>
+            {% for user in users %}
+            <tr>
+                <td>{{user.id}}</td>
+                <td>{{user.username}}</td>
+                <td>{{user.email}}</td>
+                <td><button type="button" id={{user.id}} class="btn btn-danger delete-user-btn" data-dismiss="modal" style="height: 30px; width: 70px;">Delete</button></td>
+            </tr>
+            {% endfor %}
+        </table>
     </div>
-    <br/><br /><button type="button" class="btn btn-dark" id="search-btn">Search user</button>
-    <input type="text" placeholder="Search by ID or name..." id="search-user">
-    <p id="found-user" style="margin-bottom: 0px">Searched: [None]</p>
-    <span id="found-user-username"></span>
-    <span id="found-user-email"></span>
-    <br />
-    <table id="user-table">
-        <tr>
-            <th>ID</th>
-            <th>Username</th>
-            <th>Email</th>
-        </tr>
-        {% for user in users %}
-        <tr>
-            <td>{{user.id}}</td>
-            <td>{{user.username}}</td>
-            <td>{{user.email}}</td>
-            <td><button type="button" id={{user.id}} class="btn btn-danger delete-user-btn" data-dismiss="modal" style="height: 30px; width: 70px;">Delete</button></td>
-        </tr>
-        {% endfor %}
-    </table>
+    <div id="footer"></div>
 </body>
 </html>

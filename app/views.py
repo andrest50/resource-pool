@@ -35,6 +35,18 @@ def users_page():
         print(user.email)
     return render_template('users.html', users=users)
 
+@bp.route('/layouts/header.html')
+def header_component():
+    page = request.args.get('active_page', None)
+    print(page)
+    return render_template('layouts/header.html', active_page=page)
+
+@bp.route('/layouts/footer.html')
+def footer_component():
+    page = request.args.get('active_page', None)
+    print(page)
+    return render_template('layouts/footer.html', active_page=page)
+
 class UserListResource(Resource):
     def get(self):
         users = models.User.query.all()

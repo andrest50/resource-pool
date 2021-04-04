@@ -8,3 +8,9 @@ table {
     border-spacing: 2px;
     border-color: gray;
 }
+
+#footer {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+}
