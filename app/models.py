@@ -11,19 +11,23 @@ class Resource(db.Model):
 
     id = Column(Integer, primary_key=True)
     url = Column(String(80), unique=False, nullable=False)
+    category = Column(String(80), nullable=False)
+    resc_type = Column(String(80), nullable=False)
     user_id = Column(Integer, db.ForeignKey('users.id'), nullable=False)
 
     def __repr__(self):
         resource_dict = {
             'id': self.id,
             'url': self.url,
+            'category': self.category,
+            'resc_type': self.resc_type,
             'user_id': self.user_id
         }
         return json.dumps(resource_dict)
 
 class ResourceSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
-        fields = ('id', 'url', 'user_id')
+        fields = ('id', 'url', 'category', 'resc_type', 'user_id')
         model = Resource
         include_fk = True
         sqla_session = db.session

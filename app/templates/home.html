@@ -7,17 +7,24 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </header>
+<style>
+    th, td {
+        padding: 0 15px;
+    }
+</style>
 <script type="text/javascript">
     $(document).ready(function(){
         $('#create-resource-form').submit(function(e){
             e.preventDefault()
 
             form_values = $(this).serializeArray()
-            if(!form_values[0].value || !form_values[1].value)
+            if(!form_values[0].value || !form_values[1].value || !form_values[2].value || !form_values[3].value)
                 return
             resource_obj = {
                 url: form_values[0].value,
-                user_id: parseInt(form_values[1].value)
+                category: form_values[1].value,
+                resc_type: form_values[2].value,
+                user_id: parseInt(form_values[3].value)
             }
             console.log(resource_obj)
             $(':input', '#create-resource-form')
@@ -61,6 +68,7 @@
 <body>
     <h1>Dashboard</h1>
     <p>This is a website for finding learning resources.</p>
+    <a href="/users_page">Users</a><br /><br />
     <input type="text" placeholder="Search.."><br /><br />
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
         Create Resource
@@ -79,6 +87,19 @@
                         <input type="text" name="resource_url" value="" class="form-control" id="resource_url" aria-describedby="urlHelp" placeholder="URL">
                     </div>
                     <div class="form-group">
+                        <label for="resource_category">Category</label>
+                        <input type="text" name="resource_category" value="" class="form-control" id="resource_category" aria-describedby="categoryHelp" placeholder="Category">
+                    </div>
+                    <div class="form-group">
+                        <label for="resource_type">Type</label>
+                        <select id="resource_type" class="form-control" type="text" name="resource_type">
+                            <option value="website">Website</option>
+                            <option value="video">Video</option>
+                            <option value="article">Article</option>
+                            <option value="book">Book</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="user_id">User ID</label>
                         <input type="text" name="user_id" value="" class="form-control" id="user_id" aria-describedby="user_idHelp" placeholder="User ID">
                     </div>
@@ -93,11 +114,22 @@
     </div>
     <div>
         <h3>Resources</h3>
-        <ul>
+        <table>
+            <tr>
+                <th>URL</th>
+                <th>Username</th>
+                <th>Cateogry</th>
+                <th>Resource Type</th>
+            </tr>
             {% for resource in resources %}
-            <li>URL: {{resource.url}} - User: {{resource.username}}</li>
+            <tr>
+                <td>{{resource.url}}</td>
+                <td>{{resource.username}}</td>
+                <td>{{resource.category}}</td>
+                <td>{{resource.resc_type}}</td>
+            </tr>
             {% endfor %}
-        </ul>
+        </table>
     </div>
 </body>
 </html>

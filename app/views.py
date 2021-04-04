@@ -13,7 +13,12 @@ bp = Blueprint('files', __name__, url_prefix='/')
 def home_page():
     #models.test_db()
     resources = models.Resource.query.join(models.User, models.Resource.user_id==models.User.id)\
-        .add_columns(models.Resource.url, models.User.id, models.User.username, models.User.email)
+        .add_columns(models.Resource.url, 
+                    models.Resource.category, 
+                    models.Resource.resc_type, 
+                    models.User.id, 
+                    models.User.username, 
+                    models.User.email)
     users = models.User.query.all()
     print(resources)
     for resource in resources:
@@ -29,36 +34,6 @@ def users_page():
         print(user.username)
         print(user.email)
     return render_template('users.html', users=users)
-
-"""
-@bp.route('/users', methods=['GET', 'POST'])
-def users_data():
-    users = models.User.query.all()
-    if request.method == 'POST':
-        a_user = json.loads(request.data)
-        print(a_user)
-        print(request.json)
-        print(request.json.email)
-        user = models.User(email=request.json.email,
-                    username=request.json.username)
-        new_user = schema.load(user, session=db.session).data
-        users.append(user)
-        database.db_session.add(user)
-        database.db_session.commit()
-        flash('You have successfully registered!')
-        return redirect(url_for('users_page'))
-    print(users)
-    return f'{users}'
-
-@bp.route('/user/:{user}', methods=['GET', 'POST'])
-def user_data():
-    users = models.User.query.all()
-    if request.method == 'POST':
-        users.append(request.users)
-        return redirect(url_for('users_page'))
-    print(users)
-    return f'{users}'
-"""
 
 class UserListResource(Resource):
     def get(self):
@@ -110,6 +85,8 @@ class ResourceListResource(Resource):
         print(request.json)
         new_resource = models.Resource(
             url=request.json['url'],
+            category=request.json['category'],
+            resc_type=request.json['resc_type'],
             user_id=request.json['user_id']
         )
         print(new_resource)
