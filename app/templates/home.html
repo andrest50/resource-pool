@@ -1,11 +1,105 @@
 <!DOCTYPE html>
 <header>
     <title>Dashboard</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/styling.css?u={{ last_updated }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </header>
+<style>
+
+</style>
+<script>
+    $(document).ready(function(){
+        $('create-resource-form').submit(function(e){
+            e.preventDefault()
+
+            form_values = $(this).serializeArray()
+            if(!form_values[0].value || !form_values[1].value)
+                return
+            resource_obj = {
+                url: form_values[0].value,
+                user_id: form_values[1].value
+            }
+
+            $(':input', '#create-resource-form')
+                    .not(':button, :submit, :reset, :hidden')
+                    .val('')
+            $('#myModal').toggle()
+
+            addResource(resource_obj)
+        })
+    })
+
+    const getResources = () => {
+        fetch('resources')
+        .then(response => response.json())
+        .then(data => {
+            let resources = data
+            console.log(resources)
+        })
+        .catch(error => console.log(error))
+    }
+
+    const addResource = (resource_data) => {
+        fetch('/resources', {
+            method: POST,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(resource_data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            let user = data
+            console.log(user)
+        })
+        .catch(error => console.log(error))
+    }
+
+</script>
 <body>
     <h1>Dashboard</h1>
     <p>This is a website for finding learning resources.</p>
     <input type="text" placeholder="Search..">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+        Create Resource
+    </button>
+    <div class="modal" id="myModal">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Register Resource</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <form id="create-resource-form">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="url">URL</label>
+                        <input type="text" name="url" value="" class="form-control" id="url" aria-describedby="urlHelp" placeholder="URL">
+                    </div>
+                    <div class="form-group">
+                        <label for="user_id">User ID</label>
+                        <input type="text" name="user_id" value="" class="form-control" id="user_id" aria-describedby="user_idHelp" placeholder="User ID">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" value="Submit" class="btn btn-success" id="submit-rescource-btn">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+        </div>
+    </div>
+    <div>
+        <h3>Resources</h3>
+        <ul>
+            {% for resource in resources %}
+            <li>URL: {{resource.url}}</li>
+            {% endfor %}
+        </ul>
+    </div>
 </body>
 </html>

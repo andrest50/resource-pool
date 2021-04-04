@@ -18,7 +18,6 @@
             get_user()
         })
         $('#search-user').keypress(function (e){
-            console.log(e.which)
             if(e.which == 13){
                 $('#search-btn').click()
                 return false
@@ -71,7 +70,6 @@
         .then(response => response.json())
         .then(data => {
             let users = data
-            console.log(users)
             searched_user = users.filter((user) => user.username === document.getElementById('search-user').value ||
                 user.id == document.getElementById('search-user').value)
             if(searched_user === undefined || searched_user.length == 0)
@@ -84,7 +82,6 @@
     }
 
     const add_user = (user_data) => {
-        console.log(JSON.stringify(user_data))
         fetch('/users', {
             method: 'POST',
             headers: {
@@ -102,7 +99,6 @@
     }
 
     const delete_user = (user_id) => {
-        console.log(user_id)
         fetch('/user/' + user_id, {
             method: 'DELETE'
         })

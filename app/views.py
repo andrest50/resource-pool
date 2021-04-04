@@ -12,7 +12,12 @@ bp = Blueprint('files', __name__, url_prefix='/')
 @bp.route('/home')
 def home_page():
     #models.test_db()
-    return render_template('home.html')
+    resources = models.Resource.query.all()
+    print(resources)
+    for resource in resources:
+        print(resource.url)
+        print(resource.user_id)
+    return render_template('home.html', resources=resources)
 
 @bp.route('/users_page')
 def users_page():
@@ -92,6 +97,25 @@ class UserResource(Resource):
     def delete(self, user_id):
         user = models.User.query.get_or_404(user_id)
         db.session.delete(user)
+        db.session.commit()
+        return '', 204
+
+class ResourceListResource(Resource):
+    def get(self):
+        resources = models.Resource.query.all()
+        return models.users_schema.dump(resources)
+
+    def post(self):
+        new_resource = models.Resource(
+            url=request.json['url'],
+            user_id=request.json['user_id']
+        )
+        db.session.add(new_resource)
+        db.session.commit()
+        return models.user_schema.dump(new_resource)
+
+    def delete(self):
+        models.Resource.query.delete()
         db.session.commit()
         return '', 204
 

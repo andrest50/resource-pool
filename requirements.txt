@@ -1,5 +1,8 @@
 Fabric
 Flask-SQLAlchemy
+Flask-Restful
+Flask-Marshmallow
+Marshmallow-SQLAlchemy
 Flask-WTF
 WTForms
 coverage
