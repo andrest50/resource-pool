@@ -1,5 +1,5 @@
 import functools
-from flask import Blueprint, render_template, jsonify, request, url_for
+from flask import Blueprint, render_template, jsonify, request, url_for, redirect
 from flask_restful import Api, Resource
 from . import models
 from app import db
@@ -55,7 +55,6 @@ class UserListResource(Resource):
         return models.users_schema.dump(users)
 
     def post(self):
-        console.log(request.json)
         new_user = models.User(
             username=request.json['username'],
             email=request.json['email'],

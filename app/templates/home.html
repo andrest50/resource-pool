@@ -35,8 +35,10 @@
             }
             console.log(resource_obj)
             $(':input', '#create-resource-form')
-                    .not(':button, :submit, :reset, :hidden')
-                    .val('')
+                .not(':button, :submit, :reset, :hidden')
+                .val('')
+            $(".modal-fade").modal("hide");
+            $(".modal-backdrop").remove();
             $('#myModal').toggle()
 
             add_resource(resource_obj)

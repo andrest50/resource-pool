@@ -41,11 +41,14 @@
                 email: form_values[1].value,
                 password: form_values[2].value
             }
+            console.log(user_obj)
             add_user(user_obj)
             
             $(':input', '#create-user-form')
                 .not(':button, :submit, :reset, :hidden')
                 .val('')
+            $(".modal-fade").modal("hide");
+            $(".modal-backdrop").remove();
             $("#myModal").modal('toggle')
 
             if(parseInt($("#user-table tr:last button").attr('id')))

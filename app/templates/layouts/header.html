@@ -33,18 +33,18 @@
                     {% endif %}
                 </ul>
                 <div class="form-inline my-2 my-lg-0">
-                    <button class="btn btn-outline-success my-2 my-sm-0" data-toggle="modal" data-target="#myModal">Login</button>
+                    <button class="btn btn-outline-success my-2 my-sm-0" data-toggle="modal" data-target="#loginModal">Login</button>
                 </div>
             </div>
         </nav>
-        <div class="modal" id="myModal">
+        <div class="modal" id="loginModal">
             <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Register</h4>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
-                <form id="create-user-form">
+                <form id="login-user-form">
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="username">Username</label>
@@ -60,7 +60,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <input type="submit" value="Submit" class="btn btn-success" id="submit-user-btn">
+                        <input type="submit" value="Submit" class="btn btn-success" id="submit-user-login-btn">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
                     </div>
                 </form>
