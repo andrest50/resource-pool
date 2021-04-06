@@ -18,7 +18,8 @@ def home_page():
                     models.Resource.resc_type, 
                     models.User.id, 
                     models.User.username, 
-                    models.User.email)
+                    models.User.email,
+                    models.User.password)
     users = models.User.query.all()
     print(resources)
     for resource in resources:
@@ -33,6 +34,7 @@ def users_page():
     for user in users:
         print(user.username)
         print(user.email)
+        print(user.password)
     return render_template('users.html', users=users)
 
 @bp.route('/layouts/header.html')
@@ -53,9 +55,11 @@ class UserListResource(Resource):
         return models.users_schema.dump(users)
 
     def post(self):
+        console.log(request.json)
         new_user = models.User(
             username=request.json['username'],
-            email=request.json['email']
+            email=request.json['email'],
+            password=request.json['password']
         )
         db.session.add(new_user)
         db.session.commit()
@@ -78,6 +82,8 @@ class UserResource(Resource):
             user.username = request.json['user']
         if 'email' in request.json:
             user.email = request.json['email']
+        if 'password' in request.json:
+            user.password = request.json['password']
         
         db.session.commit()
         return models.user_schema.dump(user)

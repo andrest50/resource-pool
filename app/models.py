@@ -41,13 +41,15 @@ class User(db.Model):
     id = Column(Integer, primary_key=True)
     username = Column(String(80), unique=True, nullable=False)
     email = Column(String(120), unique=True, nullable=False)
+    password = Column(String(80), nullable=False)
     resources = db.relationship('Resource', backref='user')
 
     def __repr__(self):
         user_dict = {
             'id': self.id,
             'username': self.username,
-            'email': self.email
+            'email': self.email,
+            'password': self.password
         }
         return json.dumps(user_dict)
 
@@ -60,6 +62,7 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
     id = ma.auto_field()
     username = ma.auto_field()
     email = ma.auto_field()
+    password = ma.auto_field()
     #resources = ma.auto_field()
     resources = ma.Nested(ResourceSchema, many=True)
 
@@ -68,8 +71,8 @@ users_schema = UserSchema(many=True)
 
 def test_db():
     #Base.metadata.create_all()
-    admin = User(username='admin', email='admin@example.com')
-    guest = User(username='guest', email='guest@example.com')
+    admin = User(username='admin', email='admin@example.com', password="testing")
+    guest = User(username='guest', email='guest@example.com', password="testing2")
     session.add(admin)
     session.add(guest)
     session.commit()

@@ -34,11 +34,12 @@
             e.preventDefault()
 
             form_values = $(this).serializeArray()
-            if(!form_values[0].value || !form_values[1].value)
+            if(!form_values[0].value || !form_values[1].value || !form_values[2].value)
                 return
             user_obj = {
                 username: form_values[0].value,
-                email: form_values[1].value
+                email: form_values[1].value,
+                password: form_values[2].value
             }
             add_user(user_obj)
             
@@ -55,12 +56,14 @@
             new_entry_id = $("<td></td>").text(new_entry_id_val)
             new_entry_username = $("<td></td>").text(user_obj['username'])
             new_entry_email = $("<td></td>").text(user_obj['email'])
+            new_entry_password = $("<td></td>").text(user_obj['password'])
             new_entry_delete_btn = $('<td></td>').append($('<button></button>')
                 .text("Delete")
                 .addClass('btn btn-danger delete-user-btn')
                 .attr('id', new_entry_id_val)
                 .css({'height': '30px', 'width': '70px'}))
-            $("#user-table").find('tbody').append($('<tr>').append(new_entry_id, new_entry_username, new_entry_email, new_entry_delete_btn))
+            $("#user-table").find('tbody').append($('<tr>').append(new_entry_id, new_entry_username, 
+                new_entry_email, new_entry_password, new_entry_delete_btn))
         })
         $(".delete-user-btn").click(function(e){
             delete_user(e.target.id)
@@ -84,11 +87,13 @@
             $("#found-user").text("Searched: " + searched_user[0].username)
             $("#found-user-username").text("Username: " + searched_user[0].username)
             $("#found-user-email").text("Email: " + searched_user[0].email)
+            $("#found-user-password").text("Password: " + searched_user[0].password)
         })
         .catch(error => console.log(error))
     }
 
     const add_user = (user_data) => {
+        console.log(user_data)
         fetch('/users', {
             method: 'POST',
             headers: {
@@ -151,7 +156,11 @@
                         <div class="form-group">
                             <label for="email">Email address</label>
                             <input type="email" name="email" value="" class="form-control" id="email" placeholder="Email">
-                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" name="password" value="" class="form-control" id="password" minlength="8" required placeholder="Password">
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <input type="submit" value="Submit" class="btn btn-success" id="submit-user-btn">
@@ -166,18 +175,21 @@
         <p id="found-user" style="margin-bottom: 0px">Searched: [None]</p>
         <span id="found-user-username"></span>
         <span id="found-user-email"></span>
+        <span id="found-user-password"></span>
         <br />
         <table id="user-table">
             <tr>
                 <th>ID</th>
                 <th>Username</th>
                 <th>Email</th>
+                <th>Password</th>
             </tr>
             {% for user in users %}
             <tr>
                 <td>{{user.id}}</td>
                 <td>{{user.username}}</td>
                 <td>{{user.email}}</td>
+                <td>{{user.password}}</td>
                 <td><button type="button" id={{user.id}} class="btn btn-danger delete-user-btn" data-dismiss="modal" style="height: 30px; width: 70px;">Delete</button></td>
             </tr>
             {% endfor %}
